@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(v.getId()){
             case R.id.ac_btn:
                 currentText ="0";
-                //counted=false;
                 break;
 
             case R.id.del_btn:
@@ -82,104 +81,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
 
-            case R.id.plus_btn:
-                if(Judge()) {
-                    currentText = GetResult();
-                    if(!currentText.equals("ERROR")){
-                        currentText+="+";
-                    }
-                }else{
-                    former = currentText.substring(currentText.length() - 1);
-                    if(former.equals("+")||former.equals("-")||former.equals("×")||former.equals("÷")||former.equals(".")){
-                        currentText = currentText.substring(0,currentText.length()-1);
-                        currentText +="+";
-                    }else if(!currentText.equals("")){
-                        currentText +="+";
-                    }
-                    if(counted){
-                        counted=false;
-                    }
-                }
-                break;
-
-            case R.id.minus_btn:
-                if(Judge()) {
-                    currentText = GetResult();
-                    if(!currentText.equals("ERROR")){
-                        currentText+="-";
-                    }
-                }else{
-                    former = currentText.substring(currentText.length() - 1);
-                    if(former.equals("+")||former.equals("-")||former.equals("×")||former.equals("÷")||former.equals(".")){
-                        currentText = currentText.substring(0,currentText.length()-1);
-                        currentText +="-";
-                    }else{
-                        currentText +="-";
-                    }
-                    if(counted){
-                        counted=false;
-                    }
-        }
-                break;
-
-            case R.id.multiply_btn:
-                if(Judge()) {
-                    currentText = GetResult();
-                    if(!currentText.equals("ERROR")){
-                        currentText+="×";
-                    }
-                }else{
-                    former = currentText.substring(currentText.length() - 1);
-                    if(former.equals("+")||former.equals("-")||former.equals("×")||former.equals("÷")||former.equals(".")){
-                        currentText = currentText.substring(0,currentText.length()-1);
-                        currentText +="×";
-                    }else if(!currentText.equals("")){
-                        currentText +="×";
-                    }
-                    if(counted){
-                        counted=false;
-                    }
-                }
-                break;
-
-            case R.id.divide_btn:
-                if(Judge()) {
-                    currentText = GetResult();
-                    if(!currentText.equals("ERROR")){
-                        currentText+="÷";
-                    }
-                }else{
-                    former = currentText.substring(currentText.length() - 1);
-                    if(former.equals("+")||former.equals("-")||former.equals("×")||former.equals("÷")||former.equals(".")){
-                        currentText = currentText.substring(0,currentText.length()-1);
-                        currentText +="÷";
-                    }else if(!currentText.equals("")){
-                        currentText +="÷";
-                    }
-                    if(counted){
-                        counted=false;
-                    }
-                }
-                break;
-
             case R.id.dot_btn:
                 if(counted){
                     currentText="0.";
                     counted = false;
                 }else{
                     if(currentText.contains("+")||currentText.contains("-")||currentText.contains("×")||currentText.contains("÷")){
-                        if(currentText.contains("+")){
-                            former = currentText.substring(currentText.indexOf("+")+1);
-                        }
-                        if(currentText.contains("-")){
-                            former = currentText.substring(currentText.lastIndexOf("-")+1);
-                        }
-                        if(currentText.contains("×")){
-                            former = currentText.substring(currentText.indexOf("×")+1);
-                        }
-                        if(currentText.contains("÷")){
-                            former = currentText.substring(currentText.indexOf("÷")+1);
-                        }
+                        former=GetContent();
                         if(!former.contains(".")){
                             if(former.equals("")){
                                 currentText +="0.";
@@ -199,6 +107,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
 
+            case R.id.plus_btn:
+                currentText =Symbol("+");
+                break;
+
+            case R.id.minus_btn:
+                currentText =Symbol("-");
+                break;
+
+            case R.id.multiply_btn:
+                currentText =Symbol("×");
+                break;
+
+            case R.id.divide_btn:
+                currentText =Symbol("÷");
+                break;
             case R.id.equal_btn:
                 if(Judge()){
                     currentText = GetResult();
@@ -208,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.percent_btn:
                 former=currentText.substring(currentText.length()-1);
-                if(former.equals("1")||former.equals("2")||former.equals("3")||former.equals("4")||former.equals("5")||former.equals("6")||former.equals("7")||former.equals("8")||former.equals("9")){
+                if(former.equals("0")||former.equals("1")||former.equals("2")||former.equals("3")||former.equals("4")||former.equals("5")||former.equals("6")||former.equals("7")||former.equals("8")||former.equals("9")){
                     currentText +="%";
                 }
                 break;
@@ -264,15 +187,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             former=currentText.substring(currentText.length() - 1);
             if(!former.contains("%")){
                 if(currentText.contains("+")||currentText.contains("-")||currentText.contains("×")||currentText.contains("÷")) {
-                    if (currentText.contains("+")) {
-                        former = currentText.substring(currentText.indexOf("+") + 1);
-                    }else if (currentText.contains("-")) {
-                        former = currentText.substring(currentText.lastIndexOf("-") + 1);
-                    }else if (currentText.contains("×")) {
-                        former = currentText.substring(currentText.indexOf("×") + 1);
-                    }else if (currentText.contains("÷")) {
-                        former = currentText.substring(currentText.indexOf("÷") + 1);
-                    }
+                    former=GetContent();
                     if(former.equals("0")){
                         currentText=currentText.substring(0,currentText.length()-1);
                         currentText +=n;
@@ -368,5 +283,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             b=Double.parseDouble(a);
         }
         return b;
+    }
+
+    private String GetContent(){
+        if (currentText.contains("+")) {
+            former = currentText.substring(currentText.indexOf("+") + 1);
+        }else if (currentText.contains("×")) {
+            former = currentText.substring(currentText.indexOf("×") + 1);
+        }else if (currentText.contains("÷")) {
+            former = currentText.substring(currentText.indexOf("÷") + 1);
+        }else if (currentText.contains("-")) {
+            former = currentText.substring(currentText.lastIndexOf("-") + 1);
+        }
+        return former;
+    }
+
+    private String Symbol(String n){
+        if(Judge()) {
+            currentText = GetResult();
+            if(!currentText.equals("ERROR")){
+                currentText+=n;
+            }
+        }else {
+            former = currentText.substring(currentText.length() - 1);
+            if (former.equals("+") || former.equals("-") || former.equals("×") || former.equals("÷") || former.equals(".")) {
+                currentText = currentText.substring(0, currentText.length() - 1);
+                currentText += n;
+            } else if (!currentText.equals("")) {
+                currentText += n;
+            }
+            if (counted) {
+                counted = false;
+            }
+        }
+        return currentText;
     }
 }
