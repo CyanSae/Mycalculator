@@ -65,14 +65,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch(v.getId()){
             case R.id.ac_btn:
                 currentText ="0";
+                //counted=false;
                 break;
 
             case R.id.del_btn:
                 if(currentText.equals("ERROR")){
                     currentText ="0";
+
                 }else if(currentText.length()>0){
                     if(currentText.length()==1){
                         currentText ="0";
+                        //counted=false;
                     }else{
                         currentText = currentText.substring(0,currentText.length()-1);
                     }
@@ -256,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private String Number(String currentText ,String n){
         if(counted){
             currentText=n;
-
+            counted =false;
         }else{
             former=currentText.substring(currentText.length() - 1);
             if(!former.contains("%")){
@@ -290,20 +293,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private boolean Judge(){
+        String latter="a";
         if(currentText.contains("+")||currentText.contains("-")||currentText.contains("×")||currentText.contains("÷")) {
             if (currentText.contains("+")) {
                 former = currentText.substring(currentText.indexOf("+") + 1);
-            }
-            if (currentText.contains("-")) {
-                former = currentText.substring(currentText.lastIndexOf("-") + 1);
-            }
-            if (currentText.contains("×")) {
+            }else if (currentText.contains("×")) {
                 former = currentText.substring(currentText.indexOf("×") + 1);
-            }
-            if (currentText.contains("÷")) {
+            }else if (currentText.contains("÷")) {
                 former = currentText.substring(currentText.indexOf("÷") + 1);
+            }else if (currentText.contains("-")) {
+                latter = currentText.substring(0,currentText.lastIndexOf("-"));
+                 former= currentText.substring(currentText.lastIndexOf("-") + 1);
             }
-            if (former.equals("")) {
+            if (former.equals("")||latter.equals("")) {
                 return false;
             } else {
                 return true;
@@ -327,13 +329,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             pb=IsPercent(numb);
             temResult=pa+pb;
             result=String.valueOf(temResult);
-        }else if(currentText.contains("-") ){
-            numa=currentText.substring(0,currentText.lastIndexOf("-"));
-            numb=currentText.substring(currentText.lastIndexOf("-")+1 );
-            pa=IsPercent(numa);
-            pb=IsPercent(numb);
-            temResult=pa-pb;
-            result=String.valueOf(temResult);
         }else if(currentText.contains("×") ){
             numa=currentText.substring(0,currentText.indexOf("×"));
             numb=currentText.substring(currentText.indexOf("×")+1 );
@@ -349,10 +344,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(pb==0) {
                 result="ERROR";
             }else {
-                temResult = pa / pb;
+                temResult=pa/pb;
                 result = String.valueOf(temResult);
             }
-            }
+        }else if(currentText.contains("-") ){
+            numa=currentText.substring(0,currentText.lastIndexOf("-"));
+            numb=currentText.substring(currentText.lastIndexOf("-")+1 );
+            pa=IsPercent(numa);
+            pb=IsPercent(numb);
+            temResult=pa-pb;
+            result=String.valueOf(temResult);
+        }
         return result;
     }
 
